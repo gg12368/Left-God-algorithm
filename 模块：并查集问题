@@ -1,0 +1,61 @@
+并查集问题
+并查集有两个功能：
+
+判断两个集合中的元素是否在同一个集合中，
+根据两个集合中的元素，将不是同一集合的整和到一起。最开始需要将所有的样本点给出。
+步骤：
+
+1.首先第一步将所有各自的数目整成一个集合（每个节点单独形成一个集合）
+2.在一个集合中每个节点都是自己集合中的代表节点，当集合合并的时候，如果决定将2挂到1的底下，此时2所在集合中，只有1节点指向自己，所以1为这个集合的代表节点。
+3.由于每一个集合中都有一个集合的代表节点，所以可以通过代表节点来进行是否在同一个集合的判断，也可以将另外一个集合的代表节点连接到本集合中，此时整个集合也只有一个代表节点，实现集合的整合。（首先进行元素数目的判断，将少元素的集合挂到多元素的底下）
+优化：在向上查找的过程中，将路径上的所有元素直接连接到代表节点上。
+public static class UnionFindSet{
+	public HashMap<Node,Node> fatherMap;//第一个Node代表子节点，后面代表父节点
+	public HashMap<Node,Integer> sizeMap;//Node所在集合中节点的数目
+	public UnionFindSet(){
+		fatherMap = new HashMap<Node,Node>();
+		sizeMap = new HashMap<Node,Integer>();
+	}
+	//初始化操作
+	public void makeSets(List<Node> nodes){
+		fatherMap.clear();
+		sizeMap.clear();
+		for(Node node:nodes){	
+			fatherMap.put(node,node);
+			sizeMap.put(node,1);
+		}
+	}
+	
+	private Node findHead(Node node){
+		Node father = fatherMap.get(node);
+		if(father != node){
+			father = findHead(father);
+		}
+		fatherMap.put(node,father);
+		return father;
+	}
+
+	public boolean isSameSet(Node a,Node b){
+		return findHead(a) == findHead(b);
+	}
+
+	public void union(Node a,Node b){
+		if(a == null || b = null){
+			return;
+		}
+		Node aHead = findHead(a);
+		Node bHead = findHead(b);
+		if(aHead != bHead){
+			int aSetSize = sizeMap.get(aHead);
+			int bSetSize = sizeMap.get(bHead);
+			//进行判断，如果长度不同，则将短的集合连接到长集合的上面，同时将整体集合的长度相加作为新集合的总长度
+			if(aSetSize <= bSetSize){
+				fatherMap.put(aHead,bHead);
+				sizeMap.put(bHead,aSetSize +bSetSize);
+			}else{
+				fatherMap.put(bHead,aHead);
+				sizeMap.put(aHead,aSetSize+bSetSize);
+			}
+		}
+	}
+}
