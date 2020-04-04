@@ -14,13 +14,7 @@ f(2, 5)：代表2位置处状态值为5的点。
 
 只要有叶节点的值等于 aim 的值，则会返回 true。
 
-package com.offer.foundation.class6;
- 
-/**
- * @author pengcheng
- * @date 2019/4/4 - 19:27
- * @content:
- */
+
 public class SumToAim {
     public static boolean IsSumToAim(int[] arr, int aim){
         if(arr == null){
